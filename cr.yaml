@@ -1,0 +1,15 @@
+apiVersion: example.com/v1
+kind: HPAScaler
+metadata:
+  name: my-hpa-scaler
+spec:
+  namespace: test
+  hpaName: nginx-hpa
+  cronStart:
+    cronExpression: "0 0 * * 1-5"
+    minReplicas: 1
+    maxReplicas: 3
+  cronEnd:
+    cronExpression: "0 0 * * 6-7"
+    minReplicas: 1
+    maxReplicas: 5

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hpa-scaler-operator
+  namespace: test  #your-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hpa-scaler-operator
+  template:
+    metadata:
+      labels:
+        app: hpa-scaler-operator
+    spec:
+      serviceAccountName: hpa-scaler-sa
+      containers:
+        - name: hpa-scaler-operator
+          image: dilshadahamad/hpa:1.4
+          imagePullPolicy: Always
