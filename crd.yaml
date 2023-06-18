@@ -19,7 +19,7 @@ spec:
                   type: string
                 hpaName:
                   type: string
-                cronStart:
+                scheduleStart:
                   type: object
                   properties:
                     cronExpression:
@@ -29,7 +29,7 @@ spec:
                       minimum: 1
                     maxReplicas:
                       type: integer
-                cronEnd:
+                scheduleEnd:
                   type: object
                   properties:
                     cronExpression:
@@ -42,8 +42,8 @@ spec:
               required:
                 - namespace
                 - hpaName
-                - cronStart
-                - cronEnd
+                - scheduleStart
+                - scheduleEnd
   scope: Namespaced
   names:
     plural: hpascalers
