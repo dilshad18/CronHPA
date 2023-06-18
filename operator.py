@@ -13,8 +13,8 @@ config.load_kube_config(config_file="~/.kube/config")
 async def hpascaler_daemon(body, **kwargs):
     namespace = body["spec"]["namespace"]
     hpa_name = body["spec"]["hpaName"]
-    cron_start = body["spec"]["scheduleStart"]["cronExpression"]
-    cron_end = body["spec"]["scheduleEnd"]["cronExpression"]
+    schedule_start = body["spec"]["scheduleStart"]["cronExpression"]
+    schedule_end = body["spec"]["scheduleEnd"]["cronExpression"]
     min_replicas_start = body["spec"]["scheduleStart"]["minReplicas"]
     max_replicas_start = body["spec"]["scheduleStart"]["maxReplicas"]
     min_replicas_end = body["spec"]["scheduleEnd"]["minReplicas"]
@@ -23,8 +23,8 @@ async def hpascaler_daemon(body, **kwargs):
     run_background_jobs(
         namespace,
         hpa_name,
-        cron_start,
-        cron_end,
+        schedule_start,
+        schedule_end,
         min_replicas_start,
         max_replicas_start,
         min_replicas_end,
@@ -35,8 +35,8 @@ async def hpascaler_daemon(body, **kwargs):
 def run_background_jobs(
     namespace,
     hpa_name,
-    cron_start,
-    cron_end,
+    schedule_start,
+    schedule_end,
     min_replicas_start,
     max_replicas_start,
     min_replicas_end,
@@ -46,8 +46,8 @@ def run_background_jobs(
     while True:
         current_time = datetime.datetime.now()
 
-        start_cron = croniter(cron_start)
-        end_cron = croniter(cron_end)
+        start_cron = croniter(schedule_start)
+        end_cron = croniter(schedule_end)
 
         next_start_time = start_cron.get_next(datetime.datetime)
         next_end_time = end_cron.get_next(datetime.datetime)
@@ -110,7 +110,7 @@ def hpascaler_update(body, **kwargs):
 
     if start_changed:
         # Handle update logic for 'scheduleStart' field
-        cron_start = body["spec"]["scheduleStart"]["cronExpression"]
+        schedule_start = body["spec"]["scheduleStart"]["cronExpression"]
         min_replicas_start = body["spec"]["scheduleStart"]["minReplicas"]
         max_replicas_start = body["spec"]["scheduleStart"]["maxReplicas"]
 
@@ -124,7 +124,7 @@ def hpascaler_update(body, **kwargs):
 
     if stop_changed:
         # Handle update logic for 'scheduleEnd' field
-        cron_end = body["spec"]["scheduleEnd"]["cronExpression"]
+        schedule_end = body["spec"]["scheduleEnd"]["cronExpression"]
         min_replicas_end = body["spec"]["scheduleEnd"]["minReplicas"]
         max_replicas_end = body["spec"]["scheduleEnd"]["maxReplicas"]
 
@@ -140,14 +140,14 @@ def hpascaler_update(body, **kwargs):
 @kopf.on.delete("example.com", "v1", "hpascaler")
 def hpascaler_delete(body, **kwargs):
     # Clear all the scheduled timers.
-    cron_start = body['spec']['scheduleStart']
-    cron_end = body['spec']['scheduleEnd']
-    clear_timers(namespace=body['metadata']['namespace'], cron_start=cron_start, cron_end=cron_end)
+    schedule_start = body['spec']['scheduleStart']
+    schedule_end = body['spec']['scheduleEnd']
+    clear_timers(namespace=body['metadata']['namespace'], schedule_start=schedule_start, schedule_end=schedule_end)
 
 
-def clear_timers(namespace: str, cron_start: dict, cron_end: dict):
-    kopf.timer(cron_start['cronExpression'], name='hpascaler', labels={'managed-by': 'hpascaler'}, idle=None, deleted=True)
-    kopf.timer(cron_end['cronExpression'], name='hpascaler', labels={'managed-by': 'hpascaler'}, idle=None, deleted=True)
+def clear_timers(namespace: str, schedule_start: dict, schedule_end: dict):
+    kopf.timer(schedule_start['cronExpression'], name='hpascaler', labels={'managed-by': 'hpascaler'}, idle=None, deleted=True)
+    kopf.timer(schedule_end['cronExpression'], name='hpascaler', labels={'managed-by': 'hpascaler'}, idle=None, deleted=True)
 
 
 if __name__ == "__main__":
