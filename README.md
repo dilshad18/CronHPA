@@ -12,6 +12,7 @@
 
 - Python 3.6 or higher.
 - Kopf
+- croniter
 - Kubernetes 
 - Kubernetes cluster with RBAC enabled.
 - Access to the Kubernetes cluster (either through `kubectl` or in-cluster configuration).
