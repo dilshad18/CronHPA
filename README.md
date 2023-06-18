@@ -1,4 +1,4 @@
-# hpascaler
+# hpascaler(DRAFT)
 
 `hpascaler` is a Kubernetes operator that allows you to schedule scaling actions for Horizontal Pod Autoscalers (HPAs) based on cron expressions. It provides a declarative way to define scaling configurations and automatically adjusts the min/max replicas of HPAs according to the specified schedules.
 
