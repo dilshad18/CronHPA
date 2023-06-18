@@ -5,11 +5,11 @@ metadata:
 spec:
   namespace: test
   hpaName: nginx-hpa
-  cronStart:
-    cronExpression: "0 0 * * 1-5"
-    minReplicas: 1
+  scheduleStart:
+    cronExpression: "* * * * *"
+    minReplicas: 2
     maxReplicas: 3
-  cronEnd:
+  scheduleEnd:
     cronExpression: "0 0 * * 6-7"
     minReplicas: 1
-    maxReplicas: 5
+    maxReplicas: 2
